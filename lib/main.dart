@@ -34,23 +34,32 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  final realController = TextEditingController();
-  final dolarController = TextEditingController();
-  final euroController = TextEditingController();
+  final TextEditingController realController = TextEditingController();
+  final TextEditingController dolarController = TextEditingController();
+  final TextEditingController euroController = TextEditingController();
 
   double dolar;
   double euro;
 
   void _realChanged (String text){
 
+    double real = double.parse(text);
+    dolarController.text = (real/dolar).toStringAsFixed(2);
+    euroController.text = (real/euro).toStringAsFixed(2);
 
   }
   void _dolarChanged (String text){
 
+    double dolar = double.parse(text);
+    realController.text = (dolar*this.dolar).toStringAsFixed(2);
+    euroController.text = ((dolar*this.dolar)/euro).toStringAsFixed(2);
 
   }
   void _euroChanged (String text){
 
+    double euro = double.parse(text);
+    realController.text = (euro*this.euro).toStringAsFixed(2);
+    dolarController.text = ((euro*this.euro)/dolar).toStringAsFixed(2);
 
   }
 
@@ -91,7 +100,7 @@ class _HomeState extends State<Home> {
                 );
               } else {
                 dolar = snapshot.data["results"]["currencies"]["USD"]["buy"];
-                euro = snapshot.data["results"]["currencies"]["USD"]["buy"];
+                euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
 
                 return SingleChildScrollView(
                   padding: EdgeInsets.all(10.0),
@@ -124,7 +133,10 @@ Widget buildTextField(String label, String prefix, TextEditingController c, Func
         border:
         OutlineInputBorder(),
         prefixText: prefix),
-    style: TextStyle(color: Colors.amber, fontSize: 25.0),
+    style: TextStyle(
+        color: Colors.amber, fontSize: 25.0
+    ),
+    controller: c,
     onChanged: f,
     keyboardType: TextInputType.number,
   );
